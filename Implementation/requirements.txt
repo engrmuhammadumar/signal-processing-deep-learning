@@ -1,0 +1,11 @@
+numpy
+pandas
+scipy
+matplotlib
+Pillow
+pywt
+scikit-learn
+tqdm
+tensorflow==2.*
+pycwt
+EMD-signal
