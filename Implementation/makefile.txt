@@ -1,0 +1,46 @@
+# ---------- Target / toolchain ----------
+ARCH  := armv7-a
+MCPU  := cortex-a8
+
+CC    := arm-none-eabi-gcc
+LD    := arm-none-eabi-ld
+OC    := arm-none-eabi-objcopy
+
+LINKER_SCRIPT := rtos.ld
+
+# ---------- Sources / objects ----------
+ASM_SRCS := $(wildcard boot/*.S)
+OBJS     := $(patsubst boot/%.S, build/%.o, $(ASM_SRCS))
+
+# ---------- Flags ----------
+ASFLAGS := -mcpu=$(MCPU) -g -x assembler-with-cpp
+LDFLAGS := -T $(LINKER_SCRIPT) -nostdlib -n
+
+# ---------- Outputs ----------
+RTOS_ELF := build/rtos.axf
+RTOS_BIN := build/rtos.bin
+
+.PHONY: all clean run debug gdb
+
+all: $(RTOS_ELF)
+
+clean:
+	@rm -rf build
+
+run: $(RTOS_ELF)
+	qemu-system-arm -M realview-pb-a8 -nographic -kernel $(RTOS_ELF)
+
+debug: $(RTOS_ELF)
+	qemu-system-arm -M realview-pb-a8 -nographic -kernel $(RTOS_ELF) -S -gdb tcp::1234,ipv4
+
+gdb:
+	gdb-multiarch
+
+$(RTOS_ELF): $(OBJS) $(LINKER_SCRIPT)
+	$(LD) $(LDFLAGS) -o $@ $(OBJS)
+	$(OC) -O binary $@ $(RTOS_BIN)
+
+build/%.o: boot/%.S
+	mkdir -p $(dir $@)
+	$(CC) $(ASFLAGS) -c -o $@ $<
+
