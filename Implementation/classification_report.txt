@@ -1,0 +1,14 @@
+ENSEMBLE MODEL - CLASSIFICATION REPORT
+============================================================
+
+                          precision    recall  f1-score   support
+
+Heat Dissipation Failure     1.0000    1.0000    1.0000        42
+              No Failure     1.0000    1.0000    1.0000        42
+              Overstrain     1.0000    1.0000    1.0000        42
+           Power Failure     1.0000    0.9524    0.9756        42
+       Tool Wear Failure     0.9545    1.0000    0.9767        42
+
+                accuracy                         0.9905       210
+               macro avg     0.9909    0.9905    0.9905       210
+            weighted avg     0.9909    0.9905    0.9905       210
